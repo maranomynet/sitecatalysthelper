@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- encoding: utf-8 -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="is">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>.</title>
+
+  <script src="s-code-h20.3-stripped.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+  <script src="sitecatalysthelper-min.js"></script>
+
+  <script>
+    // The .init() may only be run once.
+    sitecatalystHelper.init(
+        // Account name. (From this point on, this value can't be changed.)
+        'mycompanycode',
+        // unoverridable ping defaults. (From this point on, these values can't be changed.)
+        {
+          visitorNamespace:     'mycompany',
+          dc:                   '112',
+          trackingServer:       'stats.company.com',
+          trackingServerSecure: 'securestats.company.com'
+        },
+        // properties to add to the sitecatalystHelper.defaults object. (Can be changed again any time.)
+        {
+          pageName:  'my page name'
+        }
+      );
+
+
+    // Nice API call to set/override individual (default) config values
+    sitecatalystHelper.setDefaults({
+        // configs/settings
+      });
+    // Also possible: Direct (lo-fi) access to defaults
+    sitecatalystHelper.defaults.eVar1 = 'blah'; // set individual default values
+    sitecatalystHelper.defaults = {};          // wipe out all defaults
+
+
+
+    // Nice API call to set/override tracking rules for (link/button) Elements or certain Element URLs
+    sitecatalystHelper.track(
+        // Extends: sitecatalystHelper.trackSelectors
+        {
+          '*': {
+              $priority: -1,   // low priority default
+              eVar1:   'blah'
+              // tracking settings that should apply to all elements
+            },
+          '.buy input': {
+              $onPing: function(elm){
+                  var config = this;
+                  config.eVar1 = elm.text() || config.eVar1;
+                },
+              eVar1: 'Foo'  // overrides rule set for '*' above - because the default priority of 0 trumps '*'s priority of -1
+              // tracking settings that should apply to all buy buttons
+            },
+          '.buy.crap input': {
+              $notmethanks: true  // no tracking allowed for these elements.
+            },
+          '.buy.coolstuff input': {
+              $priority:    1000,  // super high priority 
+              $pageloadPing: true,
+              eVar1:       'Baz'
+              // tracking settings that should apply to all buy buttons
+            }
+        },
+        // Extends: sitecatalystHelper.trackUrls
+        {
+          '//www.ring.is/foo': {
+              // linkURL specific tracking configs/settings 
+            }
+        }
+      );
+    // Also possible: Direct (lo-fi) access to tracking rules
+    sitecatalystHelper.trackSelectors = {};  // wipe out all selector-based tracking rules
+    sitecatalystHelper.trackUrls = {};      // wipe out all URL-based tracking rules
+
+  </script>
+</head>
+
+<body>
+
+  <script>
+    // The `addPageloadProps` method (incrementally) adds values to a config object (buffer)
+    // that gets used (flushed) when the next pageloadPing is triggered 
+    // - which may be triggered manually, or automatically at window.onload
+    // Useful for cases where (one or more) components within the page need/wish to set certain pageloadPing values.
+    sitecatalystHelper.addPageloadProps({
+        // configs/settings
+      });
+  </script>
+
+
+  <p>View source to see demonstration and explanations of how to use the sitecatalystHelper API.</p>
+
+
+  <script>
+
+    // Miro-ping with default config.
+    sitecatalystHelper.ping();
+
+    // Micro-ping with custom config.
+    sitecatalystHelper.ping({
+        // configs/settings
+      });
+
+
+    // *Macro*/pageload ping with default config.
+    sitecatalystHelper.pageloadPing();
+    // ...or...
+    sitecatalystHelper.ping(null, true);
+
+    // *Marco*/pageload ping with custom config.
+    sitecatalystHelper.ping({
+        $pageloadPing: true
+        // configs/settings
+      });
+    // ...or...
+    sitecatalystHelper.ping({
+        // configs/settings
+      }, true);
+
+
+
+
+    // track all link and button clicks.
+    $('a, :button, :submit, :reset')
+        .bind('click', function (e) {
+            var element = this,
+                pingOk = sitecatalystHelper.resolvePing(element);
+            if (!pingOk)
+            {
+              alert('no ping was performed');
+            }
+          });
+
+
+  </script>
+
+
+  <!-- Default fallback (<noscript>) counter HTML code as provided by Adobe: -->
+
+  <!-- SiteCatalyst code version: H.20.3. Copyright 1996-2009 Adobe, Inc. All Rights Reserved More info available at http://www.omniture.com -->
+  <script language="JavaScript" type="text/javascript"><!--
+  if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+  //--></script><noscript><a href="http://www.omniture.com" title="Web Analytics"><img 
+  src="http://siminnring.112.2O7.net/b/ss/siminnring/1/H.20.3--NS/0"
+  height="1" width="1" border="0" alt="" /></a></noscript>
+  <!-- End SiteCatalyst code version: H.20.3. -->
+
+
+</body>
+</html>
