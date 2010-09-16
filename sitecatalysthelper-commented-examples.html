@@ -7,29 +7,30 @@
   <title>.</title>
 
   <script src="s-code-h20.3-stripped.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
   <script src="sitecatalysthelper-min.js"></script>
 
   <script>
     // The .init() may only be run once.
     sitecatalystHelper.init(
-        // Account name. (From this point on, this value can't be changed.)
+        // Param 1:  Account name. (From this point on, this value can't be changed.)
         'mycompanycode',
-        // unoverridable ping defaults. (From this point on, these values can't be changed.)
+        // Param 2:  unoverridable ping defaults. (From this point on, these values can't be changed.)
         {
           visitorNamespace:     'mycompany',
           dc:                   '112',
           trackingServer:       'stats.company.com',
           trackingServerSecure: 'securestats.company.com'
         },
-        // properties to add to the sitecatalystHelper.defaults object. (Can be changed again any time.)
+        // Param 3:  properties to add to the sitecatalystHelper.defaults object. (May be changed again, any time.)
         {
           pageName:  'my page name'
         }
       );
 
 
-    // Nice API call to set/override individual (default) config values
+    // Nice API call to set/override individual (default) config values.
+    // pass in a the properties that you wish to change. Empty object {} updates nothing.
     sitecatalystHelper.setDefaults({
         // configs/settings
       });
@@ -121,20 +122,27 @@
     sitecatalystHelper.ping({
         // configs/settings
       }, true);
+    // NOTE: if no explicit pageloadPing call has been made at `window.onload`,
+    //       then sitecatalystHelper will perform one automatically.
 
 
 
 
     // track all link and button clicks.
-    $('a, :button, :submit, :reset')
-        .bind('click', function (e) {
-            var element = this,
-                pingOk = sitecatalystHelper.resolvePing(element);
-            if (!pingOk)
-            {
-              alert('no ping was performed');
-            }
-          });
+    $('body')
+        .delegate(
+            'a, input:button, input:submit, input:reset',
+            'click',
+            function (e) {
+                var element = this,
+                    pingOk = sitecatalystHelper.resolvePing(element);
+                if (!pingOk)
+                {
+                  alert('no ping was performed');
+                }
+              }
+          );
+
 
 
   </script>
